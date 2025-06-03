@@ -24,6 +24,10 @@ def create_box(x, y, size=(50, 50)):
     shape.friction = 2.0
     shape.color = pygame.Color("darkGreen")
     space.add(boxBody, shape)
+    return shape
+
+#Box=Pig Pig takes three hit points and then "dies"
+
 
 def create_Hplane(x, y, size=(200, 25)):
     mass = 3
@@ -36,8 +40,6 @@ def create_Hplane(x, y, size=(200, 25)):
     space.add(HplaneBody, shape)
     return HplaneBody, shape
 
-
-#create_Hplane(400, 300)
 
 def create_Vplane(x, y, size=(25, 200)):
     mass = 3
@@ -65,14 +67,30 @@ def create_circle(x, y, radius=20):
     shape.friction = 2.0
     space.add(circleBody, shape)
     shape.color = pygame.Color("red")
+    return shape
+
+
+
+#test
+
+# Define a callback function for when objects begin touching
+def on_collision_begin(arbiter, space, data):
+    print("Objects have touched!")
+    return True  # Return True to process the collision normally
+# Simulate the space
+#for _ in range(100):
+    #space.step(0.02)
+
+
 
 #Structure
 create_Vplane(700, 300)
 create_Vplane(550, 300)
 create_Hplane(625, 175)
-create_box(625, 350)
-create_box(625, 150)
-
+pig0 = create_box(625, 350)
+pig0.colision_type = 1
+pig1 = create_box(625, 150)
+pig1.colision_type = 1
 
 
 #discribing self and telling it when to run
@@ -102,9 +120,13 @@ class App:
             space.step(0.01)
             pygame.display.flip()
             self.clock.tick(60)
-#draws box on click
+#draws Bird on click
     def on_mouse_press(self, x, y):
-        create_circle(x, y)
+        bird = create_circle(x, y)
+        bird.colision_type = 2
 
+        # Add a collision handler for the two collision types
+        handler = space.add_collision_handler(1, 2)
+        handler.begin = on_collision_begin
 space.add(body)
 App().run()
